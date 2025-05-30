@@ -51,9 +51,6 @@ uploads/
 ehthumbs.db
 Thumbs.db
 
-# CSV files (if you don't want to commit your datasets)
-*.csv
-
 # Database files
 *.sqlite
 *.db
