@@ -1,0 +1,13 @@
+No,Column name,Description
+1,age,Person age
+2,gender,gender
+3,height_cm,height in cm
+4,weight_kg,weight in kg
+5,body_fat,body fat in percentage
+6,diastolic,diastolic blood pressure
+7,systolic,systolic blood pressure
+8,gripForce,gripforce
+9,sit and bend forward_cm,sit and bend forward_cm
+10,Sit-ups counts,
+11,broad jump_cm,
+12,class,Target variable. A to D. A is the best
