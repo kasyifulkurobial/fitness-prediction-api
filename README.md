@@ -2,19 +2,44 @@
 
 Sistem prediksi fitness dengan rekomendasi yang menggunakan Express.js, Supabase, dan algoritma machine learning sederhana.
 
-## 🚀 Fitur
+## Fitur
 
-- **Prediction System**: Prediksi level fitness berdasarkan input user
-- **Smart Recommendations**: Rekomendasi personal berdasarkan analisis
-- **Data Management**: Upload dan kelola dataset fitness
-- **Statistics Dashboard**: Statistik lengkap dataset dan prediksi
-- **History Tracking**: Riwayat prediksi dengan analisis detail
+- Prediksi kelas fitness (A/B/C/D) berdasarkan data CSV menggunakan pendekatan k-nearest neighbors
+- Rekomendasi peningkatan fitness berdasarkan analisis data
+- Riwayat prediksi dan analisis detail
+- Integrasi dengan Supabase untuk penyimpanan data
 
 ## 📋 Prerequisites
 
-- Node.js (v16 atau lebih baru)
+- Node.js (v18 atau lebih baru)
 - Account Supabase
 - npm atau yarn
+## Alur Kerja Prediksi
+
+1. User menginputkan data (nama, berat, tinggi, usia, sit-up counts, broad jump)
+2. Sistem mencari profil serupa dari data CSV
+3. Sistem memprediksi kelas fitness berdasarkan k-nearest neighbors dari data CSV
+4. Sistem menganalisis gap antara performa user dan profil sukses (kelas A/B)
+5. Sistem menghasilkan rekomendasi berdasarkan analisis data
+6. Hasil prediksi disimpan ke database dan dikembalikan ke user
+
+## Algoritma Prediksi
+
+Sistem menggunakan pendekatan k-nearest neighbors untuk memprediksi kelas fitness:
+
+1. Mencari profil dengan karakteristik serupa (usia, tinggi, berat)
+2. Menghitung similarity score berdasarkan Euclidean distance
+3. Mengambil k profil terdekat (default: 5)
+4. Menentukan kelas berdasarkan majority voting dari profil terdekat
+
+## Algoritma Rekomendasi
+
+Rekomendasi dihasilkan berdasarkan analisis data CSV:
+
+1. Mencari profil sukses (kelas A/B) dengan karakteristik serupa
+2. Menganalisis gap antara performa user dan rata-rata profil sukses
+3. Menghasilkan rekomendasi spesifik berdasarkan gap tersebut
+4. Memberikan target peningkatan berdasarkan data statistik
 
 ## 🛠️ Installation
 
@@ -116,42 +141,105 @@ Melakukan prediksi fitness berdasarkan input user.
 
 ```json
 {
-  "success": true,
-  "data": {
-    "userInfo": {
-      "name": "John Doe",
-      "age": 25,
-      "ageGroup": "Young Adult",
-      "height": 175,
-      "weight": 70,
-      "sitUpCounts": 30,
-      "broadJump": 220
-    },
-    "analysis": {
-      "bmi": 22.86,
-      "bmiCategory": "Normal",
-      "fitnessScore": 75,
-      "fitnessClass": "B",
-      "interpretation": "Good - Kondisi fisik baik"
-    },
-    "recommendations": [
-      {
-        "title": "💪 Good Fitness Level",
-        "message": "Anda dalam kondisi fisik yang baik, terus tingkatkan!",
-        "tips": [
-          "Tambahkan latihan kekuatan 2-3x seminggu",
-          "Tingkatkan durasi dan intensitas kardio",
-          "Fokus pada fleksibilitas dan mobilitas"
-        ]
-      }
-    ],
-    "similarProfiles": [],
-    "metadata": {
-      "predictionId": 123,
-      "timestamp": "2024-01-15T10:30:00Z",
-      "version": "1.0"
+    "success": true,
+    "data": {
+        "userInfo": {
+            "name": "Abogoboga 12323456",
+            "age": 25,
+            "ageGroup": "Adult",
+            "height": 155,
+            "weight": 50,
+            "sitUpCounts": 30,
+            "broadJump": 120
+        },
+        "analysis": {
+            "bmi": 20.81,
+            "bmiCategory": "Normal",
+            "fitnessScore": 62,
+            "fitnessClass": "C",
+            "interpretation": "Fair - Kondisi fisik cukup"
+        },
+        "recommendations": [
+            {
+                "title": "⚡ Fair Fitness Level",
+                "message": "Ada potensi besar untuk improvement! Data menunjukkan Anda bisa mencapai kelas B.",
+                "tips": [
+                    "Target sit-ups untuk kelas B: 42 repetisi",
+                    "Target broad jump untuk kelas B: 194cm",
+                    "Konsistensi latihan adalah kunci utama"
+                ]
+            },
+            {
+                "title": "💪 Peningkatan Sit-ups",
+                "message": "Profil sukses serupa rata-rata melakukan 45 sit-ups",
+                "tips": [
+                    "Tingkatkan 15 repetisi dari performa saat ini",
+                    "Latihan core 3-4x seminggu dengan progressive overload",
+                    "Tambahkan variasi: plank, bicycle crunches, mountain climbers"
+                ]
+            },
+            {
+                "title": "🦘 Peningkatan Explosive Power",
+                "message": "Profil sukses serupa rata-rata mencapai 182cm",
+                "tips": [
+                    "Target peningkatan: 62cm dari performa saat ini",
+                    "Latihan plyometric: jump squats, box jumps, burpees",
+                    "Strengthening kaki: squats, lunges, calf raises"
+                ]
+            },
+            {
+                "title": "🎯 Standar Usia 25 Tahun",
+                "message": "Berdasarkan data 10 profil sukses seusia Anda",
+                "tips": [
+                    "Standar sit-ups usia Anda: 48 repetisi",
+                    "Standar broad jump usia Anda: 200cm",
+                    "Manfaatkan usia muda untuk membangun fondasi kekuatan"
+                ]
+            }
+        ],
+        "similarProfiles": [
+            {
+                "age": 31,
+                "gender": "F",
+                "height": 165,
+                "weight": 57.3,
+                "class": "D"
+            },
+            {
+                "age": 23,
+                "gender": "F",
+                "height": 160.3,
+                "weight": 46.8,
+                "class": "D"
+            },
+            {
+                "age": 24,
+                "gender": "F",
+                "height": 154.2,
+                "weight": 37.3,
+                "class": "D"
+            },
+            {
+                "age": 23,
+                "gender": "F",
+                "height": 169.9,
+                "weight": 54.2,
+                "class": "D"
+            },
+            {
+                "age": 27,
+                "gender": "F",
+                "height": 158.4,
+                "weight": 51,
+                "class": "C"
+            }
+        ],
+        "metadata": {
+            "predictionId": 41,
+            "timestamp": "2025-06-06T02:48:06.859Z",
+            "version": "1.0"
+        }
     }
-  }
 }
 ```
 
@@ -164,8 +252,8 @@ Mengambil riwayat prediksi dengan pagination.
     "success": true,
     "data": [
         {
-            "id": 2,
-            "user_name": "John Doe",
+            "id": 39,
+            "user_name": "Abogoboga",
             "age": 25,
             "height_cm": 175,
             "weight_kg": 70,
@@ -173,7 +261,40 @@ Mengambil riwayat prediksi dengan pagination.
             "broad_jump_cm": 220,
             "predicted_class": "A",
             "bmi": 22.86,
-            "fitness_score": 88,
+            "fitness_score": 93,
+            "recommendations": [
+                {
+                    "title": "🌟 Excellent Fitness Level!",
+                    "message": "Anda berada di 95% teratas! Pertahankan performa luar biasa ini.",
+                    "tips": [
+                        "Rata-rata sit-ups kelas A: 30 repetisi",
+                        "Rata-rata broad jump kelas A: 200cm",
+                        "Fokus pada variasi latihan untuk mencegah plateau"
+                    ]
+                },
+                {
+                    "title": "🎯 Standar Usia 25 Tahun",
+                    "message": "Berdasarkan data 10 profil sukses seusia Anda",
+                    "tips": [
+                        "Standar sit-ups usia Anda: 30 repetisi",
+                        "Standar broad jump usia Anda: 200cm",
+                        "Manfaatkan usia muda untuk membangun fondasi kekuatan"
+                    ]
+                }
+            ],
+            "created_at": "2025-06-06T02:26:05.190956"
+        },
+        {
+            "id": 38,
+            "user_name": "Kahfi",
+            "age": 21,
+            "height_cm": 171,
+            "weight_kg": 80,
+            "sit_ups_counts": 60,
+            "broad_jump_cm": 250,
+            "predicted_class": "A",
+            "bmi": 27.36,
+            "fitness_score": 95,
             "recommendations": [
                 {
                     "title": "🌟 Excellent Fitness Level!",
@@ -182,6 +303,39 @@ Mengambil riwayat prediksi dengan pagination.
                         "Tingkatkan intensitas latihan untuk tantangan lebih besar",
                         "Fokus pada latihan variasi untuk mencegah plateau",
                         "Pertimbangkan untuk menjadi mentor fitness bagi orang lain"
+                    ]
+                },
+                {
+                    "title": "🏃‍♂️ Rekomendasi Penurunan Berat",
+                    "message": "BMI Anda menunjukkan kelebihan berat badan",
+                    "tips": [
+                        "Kombinasikan latihan kardio dan kekuatan",
+                        "Perhatikan pola makan dengan defisit kalori yang sehat",
+                        "Tingkatkan aktivitas fisik harian"
+                    ]
+                }
+            ],
+            "created_at": "2025-06-05T13:45:39.547636"
+        },
+        {
+            "id": 37,
+            "user_name": "Rosa",
+            "age": 19,
+            "height_cm": 160,
+            "weight_kg": 48,
+            "sit_ups_counts": 20,
+            "broad_jump_cm": 120,
+            "predicted_class": "B",
+            "bmi": 18.75,
+            "fitness_score": 70,
+            "recommendations": [
+                {
+                    "title": "💪 Good Fitness Level",
+                    "message": "Anda dalam kondisi fisik yang baik, terus tingkatkan!",
+                    "tips": [
+                        "Tambahkan latihan kekuatan 2-3x seminggu",
+                        "Tingkatkan durasi dan intensitas kardio",
+                        "Fokus pada fleksibilitas dan mobilitas"
                     ]
                 },
                 {
@@ -203,7 +357,274 @@ Mengambil riwayat prediksi dengan pagination.
                     ]
                 }
             ],
-            "created_at": "2025-05-30T03:40:12.713039"
+            "created_at": "2025-06-05T13:32:34.10611"
+        },
+        {
+            "id": 36,
+            "user_name": "Tasya",
+            "age": 19,
+            "height_cm": 160,
+            "weight_kg": 48,
+            "sit_ups_counts": 3,
+            "broad_jump_cm": 200,
+            "predicted_class": "B",
+            "bmi": 18.75,
+            "fitness_score": 70,
+            "recommendations": [
+                {
+                    "title": "💪 Good Fitness Level",
+                    "message": "Anda dalam kondisi fisik yang baik, terus tingkatkan!",
+                    "tips": [
+                        "Tambahkan latihan kekuatan 2-3x seminggu",
+                        "Tingkatkan durasi dan intensitas kardio",
+                        "Fokus pada fleksibilitas dan mobilitas"
+                    ]
+                },
+                {
+                    "title": "💪 Latihan Core",
+                    "message": "Target sit-ups untuk usia Anda: 40",
+                    "tips": [
+                        "Lakukan latihan core 3-4x seminggu",
+                        "Mulai dengan plank, mountain climbers, dan crunches",
+                        "Tingkatkan secara bertahap 2-3 repetisi per minggu"
+                    ]
+                },
+                {
+                    "title": "🦘 Latihan Explosive Power",
+                    "message": "Target broad jump untuk usia Anda: 240cm",
+                    "tips": [
+                        "Latihan plyometric seperti jump squats dan burpees",
+                        "Strengthening otot kaki dengan squats dan lunges",
+                        "Latihan koordinasi dan timing"
+                    ]
+                }
+            ],
+            "created_at": "2025-06-05T13:02:19.823633"
+        },
+        {
+            "id": 35,
+            "user_name": "Milka Putri",
+            "age": 21,
+            "height_cm": 170,
+            "weight_kg": 60,
+            "sit_ups_counts": 21,
+            "broad_jump_cm": 50,
+            "predicted_class": "B",
+            "bmi": 20.76,
+            "fitness_score": 70,
+            "recommendations": [
+                {
+                    "title": "💪 Good Fitness Level",
+                    "message": "Anda dalam kondisi fisik yang baik, terus tingkatkan!",
+                    "tips": [
+                        "Tambahkan latihan kekuatan 2-3x seminggu",
+                        "Tingkatkan durasi dan intensitas kardio",
+                        "Fokus pada fleksibilitas dan mobilitas"
+                    ]
+                },
+                {
+                    "title": "💪 Latihan Core",
+                    "message": "Target sit-ups untuk usia Anda: 40",
+                    "tips": [
+                        "Lakukan latihan core 3-4x seminggu",
+                        "Mulai dengan plank, mountain climbers, dan crunches",
+                        "Tingkatkan secara bertahap 2-3 repetisi per minggu"
+                    ]
+                },
+                {
+                    "title": "🦘 Latihan Explosive Power",
+                    "message": "Target broad jump untuk usia Anda: 240cm",
+                    "tips": [
+                        "Latihan plyometric seperti jump squats dan burpees",
+                        "Strengthening otot kaki dengan squats dan lunges",
+                        "Latihan koordinasi dan timing"
+                    ]
+                }
+            ],
+            "created_at": "2025-06-05T12:33:17.655638"
+        },
+        {
+            "id": 34,
+            "user_name": "Muhammad Al-Hiddayah",
+            "age": 22,
+            "height_cm": 174,
+            "weight_kg": 80,
+            "sit_ups_counts": 70,
+            "broad_jump_cm": 150,
+            "predicted_class": "B",
+            "bmi": 26.42,
+            "fitness_score": 75,
+            "recommendations": [
+                {
+                    "title": "💪 Good Fitness Level",
+                    "message": "Anda dalam kondisi fisik yang baik, terus tingkatkan!",
+                    "tips": [
+                        "Tambahkan latihan kekuatan 2-3x seminggu",
+                        "Tingkatkan durasi dan intensitas kardio",
+                        "Fokus pada fleksibilitas dan mobilitas"
+                    ]
+                },
+                {
+                    "title": "🏃‍♂️ Rekomendasi Penurunan Berat",
+                    "message": "BMI Anda menunjukkan kelebihan berat badan",
+                    "tips": [
+                        "Kombinasikan latihan kardio dan kekuatan",
+                        "Perhatikan pola makan dengan defisit kalori yang sehat",
+                        "Tingkatkan aktivitas fisik harian"
+                    ]
+                },
+                {
+                    "title": "🦘 Latihan Explosive Power",
+                    "message": "Target broad jump untuk usia Anda: 240cm",
+                    "tips": [
+                        "Latihan plyometric seperti jump squats dan burpees",
+                        "Strengthening otot kaki dengan squats dan lunges",
+                        "Latihan koordinasi dan timing"
+                    ]
+                }
+            ],
+            "created_at": "2025-06-05T12:32:08.814246"
+        },
+        {
+            "id": 33,
+            "user_name": "Muhammad Al-Hiddayah",
+            "age": 22,
+            "height_cm": 174,
+            "weight_kg": 80,
+            "sit_ups_counts": 90,
+            "broad_jump_cm": 150,
+            "predicted_class": "B",
+            "bmi": 26.42,
+            "fitness_score": 75,
+            "recommendations": [
+                {
+                    "title": "💪 Good Fitness Level",
+                    "message": "Anda dalam kondisi fisik yang baik, terus tingkatkan!",
+                    "tips": [
+                        "Tambahkan latihan kekuatan 2-3x seminggu",
+                        "Tingkatkan durasi dan intensitas kardio",
+                        "Fokus pada fleksibilitas dan mobilitas"
+                    ]
+                },
+                {
+                    "title": "🏃‍♂️ Rekomendasi Penurunan Berat",
+                    "message": "BMI Anda menunjukkan kelebihan berat badan",
+                    "tips": [
+                        "Kombinasikan latihan kardio dan kekuatan",
+                        "Perhatikan pola makan dengan defisit kalori yang sehat",
+                        "Tingkatkan aktivitas fisik harian"
+                    ]
+                },
+                {
+                    "title": "🦘 Latihan Explosive Power",
+                    "message": "Target broad jump untuk usia Anda: 240cm",
+                    "tips": [
+                        "Latihan plyometric seperti jump squats dan burpees",
+                        "Strengthening otot kaki dengan squats dan lunges",
+                        "Latihan koordinasi dan timing"
+                    ]
+                }
+            ],
+            "created_at": "2025-06-05T12:01:54.082265"
+        },
+        {
+            "id": 32,
+            "user_name": "Agnestasya",
+            "age": 21,
+            "height_cm": 170,
+            "weight_kg": 60,
+            "sit_ups_counts": 50,
+            "broad_jump_cm": 170,
+            "predicted_class": "B",
+            "bmi": 20.76,
+            "fitness_score": 80,
+            "recommendations": [
+                {
+                    "title": "💪 Good Fitness Level",
+                    "message": "Anda dalam kondisi fisik yang baik, terus tingkatkan!",
+                    "tips": [
+                        "Tambahkan latihan kekuatan 2-3x seminggu",
+                        "Tingkatkan durasi dan intensitas kardio",
+                        "Fokus pada fleksibilitas dan mobilitas"
+                    ]
+                },
+                {
+                    "title": "🦘 Latihan Explosive Power",
+                    "message": "Target broad jump untuk usia Anda: 240cm",
+                    "tips": [
+                        "Latihan plyometric seperti jump squats dan burpees",
+                        "Strengthening otot kaki dengan squats dan lunges",
+                        "Latihan koordinasi dan timing"
+                    ]
+                }
+            ],
+            "created_at": "2025-06-05T11:57:18.30455"
+        },
+        {
+            "id": 31,
+            "user_name": "Agnestasya",
+            "age": 21,
+            "height_cm": 170,
+            "weight_kg": 60,
+            "sit_ups_counts": 50,
+            "broad_jump_cm": 170,
+            "predicted_class": "B",
+            "bmi": 20.76,
+            "fitness_score": 80,
+            "recommendations": [
+                {
+                    "title": "💪 Good Fitness Level",
+                    "message": "Anda dalam kondisi fisik yang baik, terus tingkatkan!",
+                    "tips": [
+                        "Tambahkan latihan kekuatan 2-3x seminggu",
+                        "Tingkatkan durasi dan intensitas kardio",
+                        "Fokus pada fleksibilitas dan mobilitas"
+                    ]
+                },
+                {
+                    "title": "🦘 Latihan Explosive Power",
+                    "message": "Target broad jump untuk usia Anda: 240cm",
+                    "tips": [
+                        "Latihan plyometric seperti jump squats dan burpees",
+                        "Strengthening otot kaki dengan squats dan lunges",
+                        "Latihan koordinasi dan timing"
+                    ]
+                }
+            ],
+            "created_at": "2025-06-05T11:50:35.134029"
+        },
+        {
+            "id": 30,
+            "user_name": "Agnestasya",
+            "age": 21,
+            "height_cm": 170,
+            "weight_kg": 60,
+            "sit_ups_counts": 50,
+            "broad_jump_cm": 170,
+            "predicted_class": "B",
+            "bmi": 20.76,
+            "fitness_score": 80,
+            "recommendations": [
+                {
+                    "title": "💪 Good Fitness Level",
+                    "message": "Anda dalam kondisi fisik yang baik, terus tingkatkan!",
+                    "tips": [
+                        "Tambahkan latihan kekuatan 2-3x seminggu",
+                        "Tingkatkan durasi dan intensitas kardio",
+                        "Fokus pada fleksibilitas dan mobilitas"
+                    ]
+                },
+                {
+                    "title": "🦘 Latihan Explosive Power",
+                    "message": "Target broad jump untuk usia Anda: 240cm",
+                    "tips": [
+                        "Latihan plyometric seperti jump squats dan burpees",
+                        "Strengthening otot kaki dengan squats dan lunges",
+                        "Latihan koordinasi dan timing"
+                    ]
+                }
+            ],
+            "created_at": "2025-06-05T11:50:21.002982"
         }
     ],
     "pagination": {
