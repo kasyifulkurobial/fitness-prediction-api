@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitness Prediction API Documentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            padding: 40px 0;
+        }
+        
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .api-section {
+            margin-bottom: 40px;
+        }
+        
+        .method-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-right: 10px;
+        }
+        
+        .method-post { background: #10B981; color: white; }
+        .method-get { background: #3B82F6; color: white; }
+        
+        .endpoint-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #1f2937;
+            display: flex;
+            align-items: center;
+        }
+        
+        .endpoint-url {
+            font-family: 'Monaco', 'Menlo', monospace;
+            background: #f8fafc;
+            padding: 8px 12px;
+            border-radius: 6px;
+            border-left: 4px solid #667eea;
+            margin: 10px 0;
+            font-size: 0.9rem;
+        }
+        
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+        
+        .json-key { color: #7dd3fc; }
+        .json-string { color: #86efac; }
+        .json-number { color: #fbbf24; }
+        .json-boolean { color: #f472b6; }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        
+        .tab {
+            padding: 12px 24px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .tab.active {
+            border-bottom-color: #667eea;
+            color: #667eea;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .feature-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .try-it-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 15px;
+            transition: transform 0.2s ease;
+        }
+        
+        .try-it-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .response-section {
+            margin-top: 20px;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .status-200 { background: #dcfce7; color: #166534; }
+        .status-400 { background: #fef2f2; color: #dc2626; }
+        
+        .parameter-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        
+        .parameter-table th,
+        .parameter-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .parameter-table th {
+            background: #f8fafc;
+            font-weight: 600;
+        }
+        
+        .required { color: #dc2626; }
+        .optional { color: #6b7280; }
+        
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2rem; }
+            .container { padding: 10px; }
+            .card { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏋️ Fitness Prediction API</h1>
+            <p>Sistem prediksi fitness dengan rekomendasi menggunakan machine learning</p>
+        </div>
+
+        <!-- Overview -->
+        <div class="card">
+            <h2>📋 Overview</h2>
+            <p>API ini menggunakan algoritma k-nearest neighbors untuk memprediksi kelas fitness (A/B/C/D) berdasarkan data fisik pengguna dan memberikan rekomendasi peningkatan yang dipersonalisasi.</p>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Prediksi Akurat</h3>
+                    <p>Menggunakan algoritma KNN dengan dataset komprehensif</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💡</div>
+                    <h3>Rekomendasi Personal</h3>
+                    <p>Saran latihan berdasarkan analisis data individual</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Analisis Mendalam</h3>
+                    <p>BMI, fitness score, dan perbandingan dengan profil serupa</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Base URL -->
+        <div class="card">
+            <h2>🔗 Base URL</h2>
+            <div class="endpoint-url">https://your-api-domain.com</div>
+        </div>
+
+        <!-- Main Prediction API -->
+        <div class="card api-section">
+            <div class="endpoint-title">
+                <span class="method-badge method-post">POST</span>
+                Prediksi Fitness
+            </div>
+            <div class="endpoint-url">/api/prediction/predict</div>
+            <p>Endpoint utama untuk melakukan prediksi fitness berdasarkan data pengguna.</p>
+
+            <div class="tabs">
+                <div class="tab active" onclick="showTab('predict-request')">Request</div>
+                <div class="tab" onclick="showTab('predict-response')">Response</div>
+                <div class="tab" onclick="showTab('predict-example')">Try It</div>
+            </div>
+
+            <div id="predict-request" class="tab-content active">
+                <h4>Request Body</h4>
+                <table class="parameter-table">
+                    <thead>
+                        <tr>
+                            <th>Parameter</th>
+                            <th>Type</th>
+                            <th>Required</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>name</td>
+                            <td>string</td>
+                            <td class="required">✓</td>
+                            <td>Nama pengguna</td>
+                        </tr>
+                        <tr>
+                            <td>weight</td>
+                            <td>number</td>
+                            <td class="required">✓</td>
+                            <td>Berat badan (kg)</td>
+                        </tr>
+                        <tr>
+                            <td>height</td>
+                            <td>number</td>
+                            <td class="required">✓</td>
+                            <td>Tinggi badan (cm)</td>
+                        </tr>
+                        <tr>
+                            <td>age</td>
+                            <td>number</td>
+                            <td class="required">✓</td>
+                            <td>Usia (tahun)</td>
+                        </tr>
+                        <tr>
+                            <td>sitUpCounts</td>
+                            <td>number</td>
+                            <td class="required">✓</td>
+                            <td>Jumlah sit-up</td>
+                        </tr>
+                        <tr>
+                            <td>broadJump</td>
+                            <td>number</td>
+                            <td class="required">✓</td>
+                            <td>Jarak lompat jauh (cm)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="code-block">
+{
+  <span class="json-key">"name"</span>: <span class="json-string">"John Doe"</span>,
+  <span class="json-key">"weight"</span>: <span class="json-number">70</span>,
+  <span class="json-key">"height"</span>: <span class="json-number">175</span>,
+  <span class="json-key">"age"</span>: <span class="json-number">25</span>,
+  <span class="json-key">"sitUpCounts"</span>: <span class="json-number">30</span>,
+  <span class="json-key">"broadJump"</span>: <span class="json-number">220</span>
+}
+                </div>
+            </div>
+
+            <div id="predict-response" class="tab-content">
+                <div class="response-section">
+                    <span class="status-badge status-200">200 OK</span>
+                    <div class="code-block">
+{
+  <span class="json-key">"success"</span>: <span class="json-boolean">true</span>,
+  <span class="json-key">"data"</span>: {
+    <span class="json-key">"userInfo"</span>: {
+      <span class="json-key">"name"</span>: <span class="json-string">"John Doe"</span>,
+      <span class="json-key">"age"</span>: <span class="json-number">25</span>,
+      <span class="json-key">"ageGroup"</span>: <span class="json-string">"Adult"</span>,
+      <span class="json-key">"height"</span>: <span class="json-number">175</span>,
+      <span class="json-key">"weight"</span>: <span class="json-number">70</span>,
+      <span class="json-key">"sitUpCounts"</span>: <span class="json-number">30</span>,
+      <span class="json-key">"broadJump"</span>: <span class="json-number">220</span>
+    },
+    <span class="json-key">"analysis"</span>: {
+      <span class="json-key">"bmi"</span>: <span class="json-number">22.86</span>,
+      <span class="json-key">"bmiCategory"</span>: <span class="json-string">"Normal"</span>,
+      <span class="json-key">"fitnessScore"</span>: <span class="json-number">88</span>,
+      <span class="json-key">"fitnessClass"</span>: <span class="json-string">"A"</span>,
+      <span class="json-key">"interpretation"</span>: <span class="json-string">"Excellent - Kondisi fisik sangat baik"</span>
+    },
+    <span class="json-key">"recommendations"</span>: [
+      {
+        <span class="json-key">"title"</span>: <span class="json-string">"🌟 Excellent Fitness Level!"</span>,
+        <span class="json-key">"message"</span>: <span class="json-string">"Pertahankan performa yang luar biasa ini!"</span>,
+        <span class="json-key">"tips"</span>: [...]
+      }
+    ],
+    <span class="json-key">"similarProfiles"</span>: [...],
+    <span class="json-key">"metadata"</span>: {
+      <span class="json-key">"predictionId"</span>: <span class="json-number">123</span>,
+      <span class="json-key">"timestamp"</span>: <span class="json-string">"2025-06-06T02:48:06.859Z"</span>,
+      <span class="json-key">"version"</span>: <span class="json-string">"1.0"</span>
+    }
+  }
+}
+                    </div>
+                </div>
+            </div>
+
+            <div id="predict-example" class="tab-content">
+                <h4>🧪 Test the API</h4>
+                <p>Input data untuk testing prediksi:</p>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 20px 0;">
+                    <div>
+                        <label>Nama:</label>
+                        <input type="text" id="test-name" value="Test User" style="width: 100%; padding: 8px; margin: 5px 0; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+                    <div>
+                        <label>Usia:</label>
+                        <input type="number" id="test-age" value="25" style="width: 100%; padding: 8px; margin: 5px 0; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+                    <div>
+                        <label>Tinggi (cm):</label>
+                        <input type="number" id="test-height" value="175" style="width: 100%; padding: 8px; margin: 5px 0; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+                    <div>
+                        <label>Berat (kg):</label>
+                        <input type="number" id="test-weight" value="70" style="width: 100%; padding: 8px; margin: 5px 0; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+                    <div>
+                        <label>Sit-ups:</label>
+                        <input type="number" id="test-situps" value="30" style="width: 100%; padding: 8px; margin: 5px 0; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+                    <div>
+                        <label>Broad Jump (cm):</label>
+                        <input type="number" id="test-broadjump" value="220" style="width: 100%; padding: 8px; margin: 5px 0; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+                </div>
+                <button class="try-it-btn" onclick="testAPI()">🚀 Test Prediction</button>
+                <div id="test-result" style="margin-top: 20px;"></div>
+            </div>
+        </div>
+
+        <!-- History API -->
+        <div class="card api-section">
+            <div class="endpoint-title">
+                <span class="method-badge method-get">GET</span>
+                Riwayat Prediksi
+            </div>
+            <div class="endpoint-url">/api/prediction/history</div>
+            <p>Mengambil riwayat prediksi dengan pagination dan filtering.</p>
+
+            <h4>Query Parameters</h4>
+            <table class="parameter-table">
+                <thead>
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Type</th>
+                        <th>Required</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>page</td>
+                        <td>number</td>
+                        <td class="optional">○</td>
+                        <td>Halaman (default: 1)</td>
+                    </tr>
+                    <tr>
+                        <td>limit</td>
+                        <td>number</td>
+                        <td class="optional">○</td>
+                        <td>Jumlah per halaman (default: 10)</td>
+                    </tr>
+                    <tr>
+                        <td>userName</td>
+                        <td>string</td>
+                        <td class="optional">○</td>
+                        <td>Filter berdasarkan nama</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="code-block">
+GET /api/prediction/history?page=1&limit=10&userName=John
+            </div>
+        </div>
+
+        <!-- Detail API -->
+        <div class="card api-section">
+            <div class="endpoint-title">
+                <span class="method-badge method-get">GET</span>
+                Detail Prediksi
+            </div>
+            <div class="endpoint-url">/api/prediction/:predictionId</div>
+            <p>Mengambil analisis detail untuk prediksi tertentu.</p>
+
+            <div class="code-block">
+GET /api/prediction/123
+            </div>
+        </div>
+
+        <!-- Data Management APIs -->
+        <div class="card api-section">
+            <h2>📊 Data Management APIs</h2>
+            
+            <div style="margin: 20px 0;">
+                <div class="endpoint-title">
+                    <span class="method-badge method-get">GET</span>
+                    Dataset Fitness
+                </div>
+                <div class="endpoint-url">/api/data/fitness</div>
+                <p>Mengambil dataset fitness dengan filtering dan pagination.</p>
+            </div>
+
+            <div style="margin: 20px 0;">
+                <div class="endpoint-title">
+                    <span class="method-badge method-get">GET</span>
+                    Metadata Dataset
+                </div>
+                <div class="endpoint-url">/api/data/metadata</div>
+                <p>Informasi metadata dataset.</p>
+            </div>
+
+            <div style="margin: 20px 0;">
+                <div class="endpoint-title">
+                    <span class="method-badge method-get">GET</span>
+                    Statistik
+                </div>
+                <div class="endpoint-url">/api/data/statistics</div>
+                <p>Statistik dataset dan prediksi.</p>
+            </div>
+        </div>
+
+        <!-- Algorithm Info -->
+        <div class="card">
+            <h2>🧮 Algoritma & Scoring</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                <div style="background: #f8fafc; padding: 20px; border-radius: 8px;">
+                    <h4>🎯 K-Nearest Neighbors</h4>
+                    <ul style="margin: 10px 0; padding-left: 20px;">
+                        <li>Mencari profil serupa (k=5)</li>
+                        <li>Euclidean distance</li>
+                        <li>Majority voting</li>
+                    </ul>
+                </div>
+                <div style="background: #f8fafc; padding: 20px; border-radius: 8px;">
+                    <h4>📊 Fitness Scoring</h4>
+                    <ul style="margin: 10px 0; padding-left: 20px;">
+                        <li>BMI Score: 0-20 poin</li>
+                        <li>Sit-ups: 0-30 poin</li>
+                        <li>Broad Jump: 0-30 poin</li>
+                        <li>Age Factor: 0-20 poin</li>
+                    </ul>
+                </div>
+                <div style="background: #f8fafc; padding: 20px; border-radius: 8px;">
+                    <h4>🏆 Klasifikasi</h4>
+                    <ul style="margin: 10px 0; padding-left: 20px;">
+                        <li><strong>A (85-100):</strong> Excellent</li>
+                        <li><strong>B (70-84):</strong> Good</li>
+                        <li><strong>C (55-69):</strong> Fair</li>
+                        <li><strong>D (0-54):</strong> Poor</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabId) {
+            // Hide all tab contents
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+            
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Show selected tab content
+            document.getElementById(tabId).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+
+        function testAPI() {
+            const testData = {
+                name: document.getElementById('test-name').value,
+                age: parseInt(document.getElementById('test-age').value),
+                height: parseInt(document.getElementById('test-height').value),
+                weight: parseInt(document.getElementById('test-weight').value),
+                sitUpCounts: parseInt(document.getElementById('test-situps').value),
+                broadJump: parseInt(document.getElementById('test-broadjump').value)
+            };
+
+            // Calculate mock BMI and fitness score for demo
+            const bmi = (testData.weight / ((testData.height / 100) ** 2)).toFixed(2);
+            const fitnessScore = Math.min(100, Math.max(0, 
+                (testData.sitUpCounts * 1.5) + 
+                (testData.broadJump * 0.2) + 
+                (25 - Math.abs(testData.age - 25)) +
+                (30 - Math.abs(bmi - 22))
+            ));
+            
+            let fitnessClass = 'D';
+            if (fitnessScore >= 85) fitnessClass = 'A';
+            else if (fitnessScore >= 70) fitnessClass = 'B';
+            else if (fitnessScore >= 55) fitnessClass = 'C';
+
+            const mockResponse = {
+                success: true,
+                data: {
+                    userInfo: testData,
+                    analysis: {
+                        bmi: parseFloat(bmi),
+                        bmiCategory: bmi < 18.5 ? 'Underweight' : bmi < 25 ? 'Normal' : 'Overweight',
+                        fitnessScore: Math.round(fitnessScore),
+                        fitnessClass: fitnessClass,
+                        interpretation: fitnessClass === 'A' ? 'Excellent - Kondisi fisik sangat baik' :
+                                     fitnessClass === 'B' ? 'Good - Kondisi fisik baik' :
+                                     fitnessClass === 'C' ? 'Fair - Kondisi fisik cukup' :
+                                     'Poor - Perlu perbaikan kondisi fisik'
+                    }
+                }
+            };
+
+            document.getElementById('test-result').innerHTML = `
+                <div style="background: #f0fdf4; border: 1px solid #22c55e; border-radius: 8px; padding: 20px; margin-top: 15px;">
+                    <h4 style="color: #15803d; margin-bottom: 10px;">✅ Mock Response (Demo)</h4>
+                    <div class="code-block" style="margin: 0;">
+${JSON.stringify(mockResponse, null, 2)}
+                    </div>
+                    <p style="margin-top: 15px; color: #374151; font-size: 0.9rem;">
+                        <strong>Note:</strong> This is a demo calculation. Actual API will use machine learning algorithm with real dataset.
+                    </p>
+                </div>
+            `;
+        }
+
+        // Add smooth scrolling animation
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach((card, index) => {
+                card.style.animation = `fadeInUp 0.6s ease forwards ${index * 0.1}s`;
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+            });
+        });
+
+        // Add CSS animation keyframes
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeInUp {
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
